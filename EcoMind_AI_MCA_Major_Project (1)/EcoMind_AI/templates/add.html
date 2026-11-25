@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Add reading · EcoMind AI{% endblock %}
+{% block content %}
+<div class="page-intro"><div class="eyebrow">DATA COLLECTION</div><h1>Add an environmental reading</h1><p>Enter a measurement from a location, sensor, or sample dataset.</p></div>
+<form class="panel form-panel" method="post">
+ <label>Location name<input name="location" placeholder="e.g. Science Building" required maxlength="100"></label>
+ <div class="form-grid">
+  <label>Temperature (°C)<input type="number" name="temperature" step="0.1" min="0" required placeholder="28.5"></label>
+  <label>Humidity (%)<input type="number" name="humidity" step="0.1" min="0" max="100" required placeholder="55"></label>
+  <label>Air quality value<input type="number" name="air_quality" step="0.1" min="0" required placeholder="75"></label>
+  <label>Water usage (litres)<input type="number" name="water_usage" step="0.1" min="0" required placeholder="350"></label>
+  <label>Energy usage (kWh)<input type="number" name="energy_usage" step="0.1" min="0" required placeholder="16.5"></label>
+ </div>
+ <p class="form-hint">Use consistent units and measurement periods when comparing observations. Air-quality values depend on the sensor and scale.</p>
+ <div class="form-actions"><a class="btn outline" href="{{ url_for('index') }}">Cancel</a><button class="btn primary" type="submit">Save reading →</button></div>
+</form>{% endblock %}

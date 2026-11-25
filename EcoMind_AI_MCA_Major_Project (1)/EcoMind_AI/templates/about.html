@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}About · EcoMind AI{% endblock %}
+{% block content %}
+<div class="page-intro"><div class="eyebrow">ABOUT THE PROJECT</div><h1>Technology with an environmental purpose.</h1><p>EcoMind AI is a prototype intelligent environment monitoring and sustainability recommendation system.</p></div>
+<div class="content-grid">
+ <section class="panel"><h3>Problem statement</h3><p>Environmental readings are often collected in separate places and are difficult to translate into practical actions. EcoMind provides one place to record indicators and receive understandable recommendations.</p></section>
+ <section class="panel"><h3>Project objectives</h3><ul class="plain-list"><li>Record environmental parameters.</li><li>Present observations in a dashboard.</li><li>Apply generative AI to explain readings.</li><li>Suggest measurable sustainability actions.</li></ul></section>
+</div>
+<section class="panel"><h3>System modules</h3><div class="module-list"><div><b>01 · Data input</b><p>Manual entry of environmental observations.</p></div><div><b>02 · Data storage</b><p>SQLite database for readings and history.</p></div><div><b>03 · Visualization</b><p>Dashboard metrics and air-quality trend chart.</p></div><div><b>04 · AI recommendation</b><p>Gemini API integration with local fallback suggestions.</p></div></div></section>
+{% endblock %}

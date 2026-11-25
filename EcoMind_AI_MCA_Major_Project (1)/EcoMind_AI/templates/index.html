@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · EcoMind AI{% endblock %}
+{% block content %}
+<section class="hero">
+ <div><div class="eyebrow">SUSTAINABILITY INTELLIGENCE PLATFORM</div><h1>Understand your impact.<br><em>Improve your environment.</em></h1>
+ <p>Monitor key environmental indicators and turn readings into practical sustainability actions.</p>
+ <a class="btn primary" href="{{ url_for('add_reading') }}">＋ Add new reading</a></div>
+ <div class="hero-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="leaf">♧</div><div class="art-caption">Measure · Learn · Improve</div></div>
+</section>
+<div class="section-heading"><div><div class="eyebrow">OVERVIEW</div><h2>Environmental snapshot</h2></div><span class="muted">{{ total }} total readings</span></div>
+<div class="metrics">
+ <article class="metric"><span class="metric-icon green">⌁</span><span class="metric-label">Avg. temperature</span><strong>{{ "%.1f"|format(averages.t or 0) }}°C</strong><small>Across recorded locations</small></article>
+ <article class="metric"><span class="metric-icon blue">◉</span><span class="metric-label">Avg. air quality index*</span><strong>{{ "%.0f"|format(averages.a or 0) }}</strong><small>Lower values are preferable</small></article>
+ <article class="metric"><span class="metric-icon aqua">♧</span><span class="metric-label">Avg. water use</span><strong>{{ "%.0f"|format(averages.w or 0) }} L</strong><small>Per recorded observation</small></article>
+ <article class="metric"><span class="metric-icon orange">ϟ</span><span class="metric-label">Avg. energy use</span><strong>{{ "%.1f"|format(averages.e or 0) }} kWh</strong><small>Per recorded observation</small></article>
+</div>
+<div class="content-grid">
+ <section class="panel chart-panel"><div class="panel-head"><div><div class="eyebrow">RECENT DATA</div><h3>Air quality trend</h3></div><span class="pill">Last 8 entries</span></div><canvas id="trendChart" height="115"></canvas><p class="chart-note">*The air-quality field is a project input value. Confirm the measurement scale of your sensor before interpreting it.</p></section>
+ <section class="panel latest-panel"><div class="eyebrow">LATEST OBSERVATION</div><h3>{{ latest.location if latest else "No readings yet" }}</h3>
+ {% if latest %}<p class="muted">{{ latest.created_at }}</p><div class="latest-stats"><div><b>{{ latest.temperature }}°C</b><small>Temperature</small></div><div><b>{{ latest.humidity }}%</b><small>Humidity</small></div><div><b>{{ latest.air_quality }}</b><small>Air quality</small></div></div>
+ <a class="btn dark" href="{{ url_for('recommendations', reading_id=latest.id) }}">Generate recommendations →</a>{% else %}<a href="{{ url_for('add_reading') }}">Add your first reading</a>{% endif %}
+ </section>
+</div>
+<section class="panel table-panel"><div class="panel-head"><div><div class="eyebrow">MONITORING LOG</div><h3>Recent readings</h3></div><a class="text-link" href="{{ url_for('add_reading') }}">＋ Add reading</a></div>
+<div class="table-wrap"><table><thead><tr><th>Location</th><th>Temperature</th><th>Humidity</th><th>Air quality</th><th>Water (L)</th><th>Energy (kWh)</th><th>Action</th></tr></thead><tbody>
+{% for r in readings %}<tr><td><b>{{ r.location }}</b><small>{{ r.created_at }}</small></td><td>{{ r.temperature }}°C</td><td>{{ r.humidity }}%</td><td>{{ r.air_quality }}</td><td>{{ r.water_usage }}</td><td>{{ r.energy_usage }}</td><td><a class="text-link" href="{{ url_for('recommendations', reading_id=r.id) }}">Analyze →</a></td></tr>{% else %}<tr><td colspan="7">No data available.</td></tr>{% endfor %}
+</tbody></table></div></section>
+<script>
+fetch("{{ url_for('api_readings') }}").then(r=>r.json()).then(rows=>{
+ rows.reverse(); const ctx=document.getElementById('trendChart');
+ new Chart(ctx,{type:'line',data:{labels:rows.map(x=>x.location),datasets:[{label:'Air quality',data:rows.map(x=>x.air_quality),borderColor:'#24866b',backgroundColor:'rgba(36,134,107,.12)',fill:true,tension:.35,pointRadius:4}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#edf1ee'}},x:{grid:{display:false}}}}});
+});
+</script>
+{% endblock %}
